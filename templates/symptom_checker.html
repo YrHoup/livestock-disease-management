@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}Symptom Checker{% endblock %}
+
+{% block content %}
+    <h2>Symptom Checker</h2>
+    <form method="post">
+        <label>Select Symptoms:</label><br>
+        <input type="checkbox" name="symptoms" value="Fever"> Fever<br>
+        <input type="checkbox" name="symptoms" value="Lethargy"> Lethargy<br>
+        <input type="checkbox" name="symptoms" value="Coughing"> Coughing<br>
+        <input type="checkbox" name="symptoms" value="Diarrhea"> Diarrhea<br>
+        <input type="checkbox" name="symptoms" value="Nasal Discharge"> Nasal Discharge<br>
+        <input type="checkbox" name="symptoms" value="Eye Discharge"> Eye Discharge<br>
+        <input type="checkbox" name="symptoms" value="Skin Lesions"> Skin Lesions<br>
+        <input type="checkbox" name="symptoms" value="Labored Breathing"> Labored Breathing<br>
+        <button type="submit">Check</button>
+    </form>
+    {% if possible_diseases %}
+        <h3>Possible Diseases:</h3>
+        <ul>
+            {% for disease in possible_diseases %}
+                <li>{{ disease }}</li>
+            {% endfor %}
+        </ul>
+        <p>For a detailed analysis, use the <a href="/predict">Predict Disease</a> page.</p>
+    {% endif %}
+{% endblock %}

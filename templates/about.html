@@ -1,0 +1,146 @@
+{% extends 'base.html' %}
+
+{% block title %}About & Forum{% endblock %}
+
+{% block content %}
+    <style>
+        .forum-container, .about-container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .forum-container h2, .about-container h2 {
+            text-align: center;
+            color: #333;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        .form-group input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+            border: none;
+        }
+        .form-group input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+        .post {
+            border-bottom: 1px solid #ddd;
+            padding: 10px 0;
+            margin-bottom: 15px;
+        }
+        .post h4 {
+            margin: 0;
+            color: #333;
+        }
+        .post p {
+            margin: 5px 0;
+        }
+        .answers {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+        .answer {
+            border-left: 2px solid #4CAF50;
+            padding-left: 10px;
+            margin-bottom: 10px;
+        }
+        .error {
+            background-color: #f8d7da;
+            border: 1px solid #dc3545;
+            color: #721c24;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+    </style>
+
+    <div class="about-container">
+        <h2>About This Project</h2>
+        <p>Developed to support farmers with AI-driven disease management using cutting-edge technology.</p>
+        <p>Built with Flask and XGBoost, a powerful AI model trained on real-world data.</p>
+    </div>
+
+    <div class="forum-container">
+        <h2>Community Forum</h2>
+        <p>Ask questions about livestock health or share your expertise by answering others’ questions.</p>
+
+        <h3>Post a Question</h3>
+        <form method="POST">
+            <input type="hidden" name="action" value="post_question">
+            <div class="form-group">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="contact">Contact (Email or Phone):</label>
+                <input type="text" id="contact" name="contact" required>
+            </div>
+            <div class="form-group">
+                <label for="question">Question:</label>
+                <textarea id="question" name="question" rows="4" required></textarea>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Post Question">
+            </div>
+        </form>
+
+        {% if error %}
+            <div class="error">
+                <p>{{ error }}</p>
+            </div>
+        {% endif %}
+
+        <h3>Forum Posts</h3>
+        {% if posts %}
+            {% for post in posts %}
+                <div class="post">
+                    <h4>{{ post.name }} ({{ post.timestamp.strftime('%Y-%m-%d %H:%M') }})</h4>
+                    <p><strong>Question:</strong> {{ post.question }}</p>
+                    <p><strong>Contact:</strong> {{ post.contact }}</p>
+                    <div class="answers">
+                        {% for answer in post.answers %}
+                            <div class="answer">
+                                <p><strong>{{ answer.name or 'Anonymous' }}</strong> ({{ answer.timestamp.strftime('%Y-%m-%d %H:%M') }}):</p>
+                                <p>{{ answer.answer }}</p>
+                            </div>
+                        {% endfor %}
+                        <form method="POST">
+                            <input type="hidden" name="action" value="post_answer">
+                            <input type="hidden" name="post_id" value="{{ post.id }}">
+                            <div class="form-group">
+                                <label for="answer_{{ post.id }}">Your Answer:</label>
+                                <textarea id="answer_{{ post.id }}" name="answer" rows="2" required></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="name_{{ post.id }}">Your Name (Optional):</label>
+                                <input type="text" id="name_{{ post.id }}" name="name">
+                            </div>
+                            <div class="form-group">
+                                <input type="submit" value="Post Answer">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No posts yet. Be the first to ask a question!</p>
+        {% endif %}
+    </div>
+{% endblock %}

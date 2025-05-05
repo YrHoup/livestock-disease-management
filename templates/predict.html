@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+{% block title %}Predict Disease{% endblock %}
+
+{% block content %}
+    <h2>Disease Prediction</h2>
+    <form method="post">
+        <label for="animal_type">Animal Type:</label>
+        <select id="animal_type" name="animal_type" required>
+            <option value="Cow">Cow</option>
+            <option value="Dog">Dog</option>
+            <option value="Cat">Cat</option>
+        </select>
+        <label for="breed">Breed:</label>
+        <input type="text" id="breed" name="breed" required>
+        <label for="age">Age (years):</label>
+        <input type="number" id="age" name="age" step="0.1" required>
+        <label for="gender">Gender:</label>
+        <select id="gender" name="gender" required>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+        </select>
+        <label for="weight">Weight (kg):</label>
+        <input type="number" id="weight" name="weight" step="0.1" required>
+        <label for="symptom_1">Symptom 1:</label>
+        <input type="text" id="symptom_1" name="symptom_1" required>
+        <label for="symptom_2">Symptom 2:</label>
+        <input type="text" id="symptom_2" name="symptom_2" required>
+        <label for="symptom_3">Symptom 3:</label>
+        <input type="text" id="symptom_3" name="symptom_3" required>
+        <label for="symptom_4">Symptom 4:</label>
+        <input type="text" id="symptom_4" name="symptom_4" required>
+        <label for="body_temperature">Body Temperature (°C):</label>
+        <input type="text" id="body_temperature" name="body_temperature" value="38.5°C" required>
+        <label for="heart_rate">Heart Rate (bpm):</label>
+        <input type="number" id="heart_rate" name="heart_rate" required>
+        <label for="appetite_loss">Appetite Loss:</label>
+        <select id="appetite_loss" name="appetite_loss" required>
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+        </select>
+        <label for="vomiting">Vomiting:</label>
+        <select id="vomiting" name="vomiting" required>
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+        </select>
+        <label for="diarrhea">Diarrhea:</label>
+        <select id="diarrhea" name="diarrhea" required>
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+        </select>
+        <label for="coughing">Coughing:</label>
+        <select id="coughing" name="coughing" required>
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+        </select>
+        <label for="labored_breathing">Labored Breathing:</label>
+        <select id="labored_breathing" name="labored_breathing" required>
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+        </select>
+        <label for="lameness">Lameness:</label>
+        <select id="lameness" name="lameness" required>
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+        </select>
+        <label for="skin_lesions">Skin Lesions:</label>
+        <select id="skin_lesions" name="skin_lesions" required>
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+        </select>
+        <label for="nasal_discharge">Nasal Discharge:</label>
+        <select id="nasal_discharge" name="nasal_discharge" required>
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+        </select>
+        <label for="eye_discharge">Eye Discharge:</label>
+        <select id="eye_discharge" name="eye_discharge" required>
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+        </select>
+        <button type="submit">Predict</button>
+    </form>
+    {% if prediction %}
+        <h3>Prediction: {{ prediction }}</h3>
+        <p>Confidence: {{ probability }}%</p>
+        <p>Advice: {{ advice }}</p>
+    {% endif %}
+{% endblock %}
