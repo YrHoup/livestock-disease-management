@@ -1,33 +1,56 @@
 {% extends 'base.html' %}
 
-{% block title %}Home{% endblock %}
+{% block title %}Home - Livestock Health Guardian{% endblock %}
 
 {% block content %}
+<div class="main-content">
+    <section class="welcome-section">
+        <h1>Welcome to Livestock Health Guardian</h1>
+        <p class="subtitle">AI-powered livestock disease prediction and farm management</p>
+    </section>
 
-    <h2>Welcome to Livestock Health Guardian</h2>
-    <p>This application uses AI to help farmers predict livestock diseases and provides actionable advice for management, empowering you to keep your animals healthy and your farm thriving.</p>
-    <p><strong>Health Tip of the Day:</strong> {{ health_tip }}</p>
-
-    <!-- Display model-generated graphs -->
-    <div class="graph-container">
-        <div class="graph-item">
-            <img src="/static/dangerous_distribution.png" alt="Distribution of Dangerous Animals">
-            <p>Distribution of animals classified as dangerous or non-dangerous in the dataset.</p>
-        </div>
-        <div class="graph-item">
-            <img src="/static/symptom_frequency.png" alt="Symptom Frequency">
-            <p>Frequency of symptoms observed across all animals in the dataset.</p>
-        </div>
-        <div class="graph-item">
-            <img src="/static/confusion_matrix.png" alt="Confusion Matrix">
-            <p>Model performance: Correct vs. incorrect predictions of dangerous animals.</p>
-        </div>
-        <div class="graph-item">
-            <img src="/static/feature_importance.png" alt="Feature Importance">
-            <p>Importance of each feature (e.g., animal name, symptoms) in predicting danger.</p>
-        </div>
+    <div class="health-tip">
+        <p><strong>Health Tip of the Day:</strong> {{ health_tip }}</p>
     </div>
 
-    <a href="/predict"><button>Predict Disease</button></a>
-    <a href="/about"><button>Learn More</button></a>
+    <section class="insights-section">
+        <h2>Livestock Health Insights</h2>
+
+        <div class="graph-container">
+            <!-- First Row - 3 Graphs -->
+            <div class="graph-item">
+                <img src="/static/dangerous_distribution.png" alt="Danger Distribution">
+                <p>Distribution showing animals classified as potentially dangerous versus healthy in our dataset.</p>
+            </div>
+
+            <div class="graph-item">
+                <img src="/static/symptom_frequency.png" alt="Symptom Frequency">
+                <p>Frequency of common symptoms observed across livestock for early disease detection.</p>
+            </div>
+
+            <div class="graph-item">
+                <img src="/static/confusion_matrix.png" alt="Model Accuracy">
+                <p>Our model's performance metrics showing correct vs. incorrect predictions.</p>
+            </div>
+        </div>
+
+        <div class="graph-container two-items">
+            <!-- Second Row - 2 Graphs -->
+            <div class="graph-item">
+                <img src="/static/feature_importance.png" alt="Key Indicators">
+                <p>Key factors that most influence disease predictions to prioritize monitoring.</p>
+            </div>
+
+            <div class="graph-item">
+                <img src="/static/correlation_matrix.png" alt="Symptom Relationships">
+                <p>Correlation between different symptoms that often occur together.</p>
+            </div>
+        </div>
+    </section>
+
+    <div class="action-buttons">
+        <a href="/predict" class="btn btn-primary">Predict Disease</a>
+        <a href="/about" class="btn btn-secondary">Learn More</a>
+    </div>
+</div>
 {% endblock %}

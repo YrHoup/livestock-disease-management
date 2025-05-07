@@ -1,89 +1,108 @@
 {% extends 'base.html' %}
 
-{% block title %}Predict Disease{% endblock %}
+{% block title %}Predict Disease - Livestock Health Guardian{% endblock %}
 
 {% block content %}
-    <h2>Disease Prediction</h2>
-    <form method="post">
-        <label for="animal_type">Animal Type:</label>
-        <select id="animal_type" name="animal_type" required>
-            <option value="Cow">Cow</option>
-            <option value="Dog">Dog</option>
-            <option value="Cat">Cat</option>
-        </select>
-        <label for="breed">Breed:</label>
-        <input type="text" id="breed" name="breed" required>
-        <label for="age">Age (years):</label>
-        <input type="number" id="age" name="age" step="0.1" required>
-        <label for="gender">Gender:</label>
-        <select id="gender" name="gender" required>
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
-        </select>
-        <label for="weight">Weight (kg):</label>
-        <input type="number" id="weight" name="weight" step="0.1" required>
-        <label for="symptom_1">Symptom 1:</label>
-        <input type="text" id="symptom_1" name="symptom_1" required>
-        <label for="symptom_2">Symptom 2:</label>
-        <input type="text" id="symptom_2" name="symptom_2" required>
-        <label for="symptom_3">Symptom 3:</label>
-        <input type="text" id="symptom_3" name="symptom_3" required>
-        <label for="symptom_4">Symptom 4:</label>
-        <input type="text" id="symptom_4" name="symptom_4" required>
-        <label for="body_temperature">Body Temperature (°C):</label>
-        <input type="text" id="body_temperature" name="body_temperature" value="38.5°C" required>
-        <label for="heart_rate">Heart Rate (bpm):</label>
-        <input type="number" id="heart_rate" name="heart_rate" required>
-        <label for="appetite_loss">Appetite Loss:</label>
-        <select id="appetite_loss" name="appetite_loss" required>
-            <option value="Yes">Yes</option>
-            <option value="No">No</option>
-        </select>
-        <label for="vomiting">Vomiting:</label>
-        <select id="vomiting" name="vomiting" required>
-            <option value="Yes">Yes</option>
-            <option value="No">No</option>
-        </select>
-        <label for="diarrhea">Diarrhea:</label>
-        <select id="diarrhea" name="diarrhea" required>
-            <option value="Yes">Yes</option>
-            <option value="No">No</option>
-        </select>
-        <label for="coughing">Coughing:</label>
-        <select id="coughing" name="coughing" required>
-            <option value="Yes">Yes</option>
-            <option value="No">No</option>
-        </select>
-        <label for="labored_breathing">Labored Breathing:</label>
-        <select id="labored_breathing" name="labored_breathing" required>
-            <option value="Yes">Yes</option>
-            <option value="No">No</option>
-        </select>
-        <label for="lameness">Lameness:</label>
-        <select id="lameness" name="lameness" required>
-            <option value="Yes">Yes</option>
-            <option value="No">No</option>
-        </select>
-        <label for="skin_lesions">Skin Lesions:</label>
-        <select id="skin_lesions" name="skin_lesions" required>
-            <option value="Yes">Yes</option>
-            <option value="No">No</option>
-        </select>
-        <label for="nasal_discharge">Nasal Discharge:</label>
-        <select id="nasal_discharge" name="nasal_discharge" required>
-            <option value="Yes">Yes</option>
-            <option value="No">No</option>
-        </select>
-        <label for="eye_discharge">Eye Discharge:</label>
-        <select id="eye_discharge" name="eye_discharge" required>
-            <option value="Yes">Yes</option>
-            <option value="No">No</option>
-        </select>
-        <button type="submit">Predict</button>
-    </form>
+<div class="prediction-container">
+    <h1>Animal Disease Prediction</h1>
+    <p class="subtitle">Fill in the details below to get a health assessment for your animal</p>
+
+    <div class="prediction-form-container">
+        <form method="POST" action="/predict" class="prediction-form">
+            <div class="form-group">
+                <label for="AnimalName">Animal Type:</label>
+                <select id="AnimalName" name="AnimalName" required>
+                    <option value="">Select animal</option>
+                    <option value="Horse">Horse</option>
+                    <option value="Cow">Cow</option>
+                    <option value="Sheep">Sheep</option>
+                    <option value="Goat">Goat</option>
+                    <option value="Pig">Pig</option>
+                    <option value="Chicken">Chicken</option>
+                    <option value="Duck">Duck</option>
+                    <option value="Rabbit">Rabbit</option>
+                    <option value="Dog">Dog</option>
+                    <option value="Cat">Cat</option>
+                </select>
+            </div>
+
+            <h3>Symptoms (Select up to 4 most prominent symptoms)</h3>
+            <div class="symptoms-grid">
+                {% set symptoms = [
+                    'Fever', 'Lethargy', 'Loss of Appetite', 'Vomiting', 'Diarrhea',
+                    'Skin Lesions', 'Swelling', 'Coughing', 'Lameness', 'Labored Breathing',
+                    'Dehydration', 'Eye Discharge', 'Nasal Discharge', 'Sneezing',
+                    'Weight Loss', 'Decreased Milk Yield', 'Reduced Mobility'
+                ] %}
+
+                {% for i in range(1, 5) %}
+                <div class="symptom-group">
+                    <label for="symptoms{{i}}">Symptom {{i}}:</label>
+                    <select id="symptoms{{i}}" name="symptoms{{i}}" required>
+                        <option value="No">No symptom</option>
+                        {% for symptom in symptoms %}
+                        <option value="{{ symptom }}">{{ symptom }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                {% endfor %}
+            </div>
+
+            <button type="submit" class="btn btn-primary">Predict Health Status</button>
+        </form>
+    </div>
+
     {% if prediction %}
-        <h3>Prediction: {{ prediction }}</h3>
-        <p>Confidence: {{ probability }}%</p>
-        <p>Advice: {{ advice }}</p>
+    <div class="prediction-results">
+        <h2>Prediction Results</h2>
+
+        <div class="results-summary">
+            <div class="input-summary">
+                <h3>Animal Information:</h3>
+                <p><strong>Type:</strong> {{ request.form.AnimalName }}</p>
+
+                <h3>Symptoms Observed:</h3>
+                <ul class="symptoms-list">
+                    {% for i in range(1, 6) %}
+                        {% if request.form['symptoms' + i|string] != 'No' %}
+                            <li>{{ request.form['symptoms' + i|string] }}</li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <div class="prediction-details">
+                <div class="prediction-card {% if prediction == 'Yes' %}dangerous{% else %}safe{% endif %}">
+                    <h3>Health Status:</h3>
+                    <p class="prediction-value">
+                        {% if prediction == 'Yes' %}
+                            Dangerous (Needs Attention)
+                        {% else %}
+                            Healthy
+                        {% endif %}
+                    </p>
+                    <div class="confidence-meter">
+                        <div class="meter-bar" style="width: {{ probability }}%"></div>
+                        <span>{{ probability }}% confidence</span>
+                    </div>
+                </div>
+
+                <div class="advice-card">
+                    <h3>Recommended Actions:</h3>
+                    <p>{{ advice }}</p>
+                    {% if prediction == 'Yes' %}
+                        <p class="urgent">Please consult a veterinarian immediately.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
     {% endif %}
+
+    {% if error %}
+    <div class="error-message">
+        <p>{{ error }}</p>
+    </div>
+    {% endif %}
+</div>
 {% endblock %}
