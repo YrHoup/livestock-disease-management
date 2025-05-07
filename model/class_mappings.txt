@@ -1,0 +1,292 @@
+Disease class mappings:
+0: Actinobacillus Pleuropneumonia
+1: Actinobacillus Suis
+2: African Swine Fever
+3: Allergic Rhinitis
+4: Arthritis
+5: Blue Tongue
+6: Blue Tongue Disease
+7: Blue Tongue Virus
+8: Bluetongue
+9: Bluetongue Virus
+10: Bordetella Infection
+11: Bovine Coccidiosis
+12: Bovine Influenza
+13: Bovine Johne's Disease
+14: Bovine Leukemia Virus
+15: Bovine Mastitis
+16: Bovine Parainfluenza
+17: Bovine Pneumonia
+18: Bovine Respiratory Disease
+19: Bovine Respiratory Disease Complex
+20: Bovine Respiratory Syncytial Virus
+21: Bovine Tuberculosis
+22: Bovine Viral Diarrhea
+23: Canine Cough
+24: Canine Distemper
+25: Canine Flu
+26: Canine Heartworm Disease
+27: Canine Hepatitis
+28: Canine Infectious Hepatitis
+29: Canine Influenza
+30: Canine Leptospirosis
+31: Canine Parvovirus
+32: Caprine Arthritis
+33: Caprine Arthritis Encephalitis
+34: Caprine Arthritis Encephalitis Virus
+35: Caprine Pleuropneumonia
+36: Caprine Respiratory Disease
+37: Caprine Viral Arthritis
+38: Caseous Lymphadenitis
+39: Chlamydia in Sheep
+40: Chronic Bronchitis
+41: Coccidiosis
+42: Conjunctivitis
+43: Contagious Abortion
+44: Contagious Ecthyma
+45: Cryptosporidiosis
+46: Degenerative Joint Disease
+47: Distemper
+48: Enteritis
+49: Equine Arthritis
+50: Equine Cushing's Disease
+51: Equine Encephalitis
+52: Equine Encephalomyelitis
+53: Equine Herpesvirus
+54: Equine Infectious Anemia
+55: Equine Influenza
+56: Equine Influenza Virus
+57: Equine Laminitis
+58: Equine Leptospirosis
+59: Equine Lyme Disease
+60: Equine Metabolic Syndrome
+61: Equine Osteoarthritis
+62: Equine Piroplasmosis
+63: Equine Pneumonia
+64: Equine Protozoal Myeloencephalitis
+65: Equine Rhinopneumonitis
+66: Equine Viral Arteritis
+67: Equine West Nile Virus
+68: Feline Asthma
+69: Feline Calicivirus
+70: Feline Chlamydia
+71: Feline Chlamydiosis
+72: Feline Coronavirus
+73: Feline Herpesvirus
+74: Feline Immunodeficiency Virus
+75: Feline Infectious Peritonitis
+76: Feline Leukemia
+77: Feline Leukemia Virus
+78: Feline Panleukopenia
+79: Feline Panleukopenia Virus
+80: Feline Renal Disease
+81: Feline Respiratory Disease Complex
+82: Feline Respiratory Infection
+83: Feline Rhinotracheitis
+84: Feline Upper Respiratory Infection
+85: Feline Viral Rhinotracheitis
+86: Foot and Mouth Disease
+87: Foot-and-Mouth Disease
+88: Footrot
+89: Fungal Infection
+90: Gastroenteritis
+91: Gastrointestinal Infection
+92: Gastrointestinal Stasis
+93: Giardiasis
+94: Goat Pox
+95: Heartworm Disease
+96: Hyperthyroidism
+97: Inflammatory Bowel Disease
+98: Intestinal Parasites
+99: Johne's Disease
+100: Kennel Cough
+101: Laminitis
+102: Leptospirosis
+103: Lyme Disease
+104: Maedi-Visna
+105: Mastitis
+106: Myxomatosis
+107: Pancreatitis
+108: Panleukopenia
+109: Parvovirus
+110: Pasteurellosis
+111: Pneumonia
+112: Porcine Circovirus Disease
+113: Porcine Epidemic Diarrhea
+114: Porcine Epidemic Diarrhea Virus
+115: Porcine Reproductive and Respiratory Syndrome
+116: Porcine Respiratory Disease Complex
+117: Rabbit Calicivirus
+118: Rabbit Hemorrhagic Disease
+119: Rabbit Syphilis
+120: Rabbit Viral Hemorrhagic Disease
+121: Respiratory Infection
+122: Respiratory Syncytial Virus
+123: Ringworm
+124: Salmonellosis
+125: Scrapie
+126: Scrapie Disease
+127: Snuffles
+128: Strangles
+129: Swine Dysentery
+130: Swine Erysipelas
+131: Swine Fever
+132: Swine Flu
+133: Swine Influenza
+134: Tick-Borne Disease
+135: Tuberculosis
+136: Upper Respiratory Infection
+137: Viral Hemorrhagic Disease
+138: West Nile Virus
+
+Category mappings:
+
+Animal_Type:
+  0: Cat
+  1: Cow
+  2: Dog
+  3: Goat
+  4: Horse
+  5: Pig
+  6: Rabbit
+  7: Sheep
+
+Breed:
+  0: Aberdeen Angus
+  1: Abyssinian
+  2: Akita
+  3: Alpine
+  4: American Curl
+  5: American Quarter
+  6: Andalusian
+  7: Angora
+  8: Angus
+  9: Appaloosa
+  10: Arabian
+  11: Ayrshire
+  12: Beagle
+  13: Belgian
+  14: Belted Galloway
+  15: Bengal
+  16: Berkshire
+  17: Blackface
+  18: Boer
+  19: Bombay
+  20: Border Collie
+  21: Border Leicester
+  22: Boxer
+  23: Brahman
+  24: British Shorthair
+  25: Brown Swiss
+  26: Bulldog
+  27: Burmese
+  28: Charolais
+  29: Chester White
+  30: Cheviot
+  31: Chihuahua
+  32: Clydesdale
+  33: Cocker Spaniel
+  34: Corgi
+  35: Corriedale
+  36: Dachshund
+  37: Dalmatian
+  38: Devon Rex
+  39: Dexter
+  40: Doberman Pinscher
+  41: Dorper
+  42: Dorset
+  43: Duroc
+  44: Dutch
+  45: English Angora
+  46: English Lop
+  47: English Spot
+  48: Finnsheep
+  49: Flemish Giant
+  50: German Shepherd
+  51: Golden Retriever
+  52: Guernsey
+  53: Hampshire
+  54: Hereford
+  55: Himalayan
+  56: Holland Lop
+  57: Holstein
+  58: Husky
+  59: Jersey
+  60: Karakul
+  61: Kiko
+  62: LaMancha
+  63: Labrador
+  64: Labrador Retriever
+  65: Landrace
+  66: Large White
+  67: Leicester Longwool
+  68: Limousin
+  69: Lincoln
+  70: Maine Coon
+  71: Manx
+  72: Merino
+  73: Mini Lop
+  74: Mini Rex
+  75: Morgan
+  76: Mustang
+  77: Nigerian Dwarf
+  78: Nubian
+  79: Paint
+  80: Percheron
+  81: Persian
+  82: Pietrain
+  83: Pinto
+  84: Pit Bull
+  85: Poland China
+  86: Poodle
+  87: Quarter Horse
+  88: Ragdoll
+  89: Rambouillet
+  90: Red Angus
+  91: Red Poll
+  92: Romney
+  93: Rottweiler
+  94: Russian Blue
+  95: Saanen
+  96: Scottish Fold
+  97: Shetland Pony
+  98: Shih Tzu
+  99: Shire
+  100: Shorthorn
+  101: Siamese
+  102: Siberian
+  103: Siberian Husky
+  104: Simmental
+  105: Southdown
+  106: Sphynx
+  107: Standardbred
+  108: Suffolk
+  109: Tamworth
+  110: Tennessee Walker
+  111: Tennessee Walking Horse
+  112: Texel
+  113: Thoroughbred
+  114: Toggenburg
+  115: Tunis
+  116: Welsh Pony
+  117: Wessex Saddleback
+  118: Yorkshire
+  119: Yorkshire Terrier
+
+Gender:
+  0: Female
+  1: Male
+
+Age_Group:
+  0: Adult
+  1: Infant
+  2: Middle_Aged
+  3: Senior
+  4: Young
+
+Weight_Category:
+  0: Giant
+  1: Large
+  2: Medium
+  3: NA
+  4: Small
