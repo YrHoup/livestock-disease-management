@@ -7,21 +7,41 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
 <body>
-    <header>
-        <h1>Livestock Health Guardian</h1>
-        <nav>
-            <ul>
-                <li><a href="/">Home</a></li>
-                <li><a href="/predict">Predict Disease</a></li>
-                <li><a href="/symptom_checker">Symptom Checker</a></li>
-                <li><a href="/about">About</a></li>
-            </ul>
-        </nav>
-    </header>
-    <main>
-        {% block content %}{% endblock %}
-    </main>
+<header>
+    <h1>Livestock Health Guardian</h1>
+    <nav>
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/predict">Predict Disease</a></li>
+            <li><a href="/symptom_checker">Symptom Checker</a></li>
+            <li><a href="/advice">Advice & Resources</a></li>
+            <li><a href="/about">About</a></li>
+        </ul>
+        <ul class="auth">
+            {% if session.get('username') %}
+                <li>Welcome, {{ session['username'] }}!</li>
+                <li><a href="/logout">Logout</a></li>
+            {% else %}
+                <li><a href="/login">Login</a></li>
+                <li><a href="/signup">Sign Up</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+</header>
 
-    <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+<main>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <ul class="flashes">
+                {% for category, message in messages %}
+                    <li class="flash {{ category }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+</main>
+
+<script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
 </body>
 </html>
