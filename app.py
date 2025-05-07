@@ -1,10 +1,17 @@
-from flask import Flask, render_template, request
-import pandas as pd
-import numpy as np
-import xgboost as xgb
-import os
+import json
+import sqlite3
 
+import numpy as np
+import pandas as pd
+import xgboost as xgb
+from flask import Flask, render_template, request, redirect, session, flash
+
+from rsa import generate_rsa_keys, rsa_encrypt
+
+public_key, private_key = generate_rsa_keys()
 app = Flask(__name__, static_folder='static', static_url_path='/static')
+DATABASE = 'users.db'
+app.secret_key = 'your-very-secret-key'
 
 # Load the XGBoost model
 model = xgb.XGBClassifier()
@@ -20,6 +27,28 @@ disease_advice = {
     1: "The animal may have a serious condition. Isolate it and consult a veterinarian immediately.",
     0: "The animal appears healthy, but continue monitoring for any changes in behavior or symptoms."
 }
+
+
+def get_db():
+    """Connect to the SQLite database."""
+    conn = sqlite3.connect(DATABASE)
+    conn.row_factory = sqlite3.Row  # Allows us to access rows as dictionaries
+    return conn
+
+
+def init_db():
+    """Initialize the database with a user table."""
+    with get_db() as conn:
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS users (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                username TEXT UNIQUE NOT NULL,
+                password TEXT NOT NULL
+            )
+        """)
+
+
+init_db()
 
 
 @app.route('/')
@@ -80,6 +109,71 @@ def generate_advice(prediction, animal_type, symptoms):
 @app.route('/about')
 def about():
     return render_template('about.html')
+
+
+@app.route('/signup', methods=['GET', 'POST'])
+def signup():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+
+        if not username or not password:
+            flash('Both username and password are required!', 'danger')
+            return redirect('/signup')
+
+        # Check if the username already exists
+        conn = get_db()
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM users WHERE username = ?", (username,))
+        existing_user = cursor.fetchone()
+
+        if existing_user:
+            flash('Username already taken. Please choose another one.', 'danger')
+            return redirect('/signup')
+
+        encrypted_password = json.dumps(rsa_encrypt(public_key, password))
+
+        print(encrypted_password)
+        # Insert the new user into the database
+        cursor.execute("INSERT INTO users (username, password) VALUES (?, ?)", (username, encrypted_password))
+        conn.commit()
+        flash('User successfully registered!', 'success')
+        session['username'] = username
+        flash('User successfully registered and logged in!', 'success')
+        return redirect('/')
+
+    return render_template('signup.html')
+
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+
+        conn = get_db()
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM users WHERE username = ?", (username,))
+        user = cursor.fetchone()
+
+        if not user:
+            flash('User not found. Please try again.', 'danger')
+        else:
+            encrypted_password = json.dumps(rsa_encrypt(public_key, password))
+            if user['password'] == encrypted_password:
+                session['username'] = username
+                flash('Login successful!', 'success')
+                return redirect('/')
+            else:
+                flash('Incorrect password. Please try again.', 'danger')
+
+    return render_template('login.html')
+
+
+@app.route('/logout')
+def logout():
+    session.pop('username', None)
+    return redirect('/')
 
 
 if __name__ == '__main__':
