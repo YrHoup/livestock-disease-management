@@ -1,161 +1,108 @@
 {% extends 'base.html' %}
 
-{% block title %}Predict Disease{% endblock %}
+{% block title %}Predict Disease - Livestock Health Guardian{% endblock %}
 
 {% block content %}
-    <h2>Disease Prediction</h2>
-    <form method="post">
-        <div class="form-group">
-            <label for="animal_type">Animal Type:</label>
-            <select id="animal_type" name="animal_type" required>
-                <option value="Cow">Cow</option>
-                <option value="Dog">Dog</option>
-                <option value="Cat">Cat</option>
-            </select>
-        </div>
+<div class="prediction-container">
+    <h1>Animal Disease Prediction</h1>
+    <p class="subtitle">Fill in the details below to get a health assessment for your animal</p>
 
-        <div class="form-group">
-            <label for="breed">Breed:</label>
-            <input type="text" id="breed" name="breed" required>
-        </div>
+    <div class="prediction-form-container">
+        <form method="POST" action="/predict" class="prediction-form">
+            <div class="form-group">
+                <label for="AnimalName">Animal Type:</label>
+                <select id="AnimalName" name="AnimalName" required>
+                    <option value="">Select animal</option>
+                    <option value="Horse">Horse</option>
+                    <option value="Cow">Cow</option>
+                    <option value="Sheep">Sheep</option>
+                    <option value="Goat">Goat</option>
+                    <option value="Pig">Pig</option>
+                    <option value="Chicken">Chicken</option>
+                    <option value="Duck">Duck</option>
+                    <option value="Rabbit">Rabbit</option>
+                    <option value="Dog">Dog</option>
+                    <option value="Cat">Cat</option>
+                </select>
+            </div>
 
-        <div class="form-group">
-            <label for="age">Age (years):</label>
-            <input type="number" id="age" name="age" step="0.1" required>
-        </div>
+            <h3>Symptoms (Select up to 4 most prominent symptoms)</h3>
+            <div class="symptoms-grid">
+                {% set symptoms = [
+                    'Fever', 'Lethargy', 'Loss of Appetite', 'Vomiting', 'Diarrhea',
+                    'Skin Lesions', 'Swelling', 'Coughing', 'Lameness', 'Labored Breathing',
+                    'Dehydration', 'Eye Discharge', 'Nasal Discharge', 'Sneezing',
+                    'Weight Loss', 'Decreased Milk Yield', 'Reduced Mobility'
+                ] %}
 
-        <div class="form-group">
-            <label for="gender">Gender:</label>
-            <select id="gender" name="gender" required>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-            </select>
-        </div>
+                {% for i in range(1, 5) %}
+                <div class="symptom-group">
+                    <label for="symptoms{{i}}">Symptom {{i}}:</label>
+                    <select id="symptoms{{i}}" name="symptoms{{i}}" required>
+                        <option value="No">No symptom</option>
+                        {% for symptom in symptoms %}
+                        <option value="{{ symptom }}">{{ symptom }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                {% endfor %}
+            </div>
 
-        <div class="form-group">
-            <label for="weight">Weight (kg):</label>
-            <input type="number" id="weight" name="weight" step="0.1" required>
-        </div>
-
-        <div class="form-group">
-            <label for="temperature">Body Temperature (°C):</label>
-            <input type="number" id="temperature" name="temperature" step="0.1" value="38.5" required>
-        </div>
-
-        <div class="form-group">
-            <label for="heart_rate">Heart Rate (bpm):</label>
-            <input type="number" id="heart_rate" name="heart_rate" required>
-        </div>
-
-        <div class="form-group">
-            <label for="duration">Duration of Symptoms (days):</label>
-            <input type="number" id="duration" name="duration" value="1" min="1" step="1">
-        </div>
-
-        <h3>Symptoms</h3>
-        <p>Select up to 4 symptoms:</p>
-
-        <div class="form-group">
-            <label for="symptom1">Symptom 1:</label>
-            <select id="symptom1" name="symptom1">
-                <option value="">None</option>
-                <option value="Appetite loss">Appetite loss</option>
-                <option value="Vomiting">Vomiting</option>
-                <option value="Diarrhea">Diarrhea</option>
-                <option value="Coughing">Coughing</option>
-                <option value="Difficulty breathing">Difficulty breathing</option>
-                <option value="Lameness">Lameness</option>
-                <option value="Skin rash">Skin rash</option>
-                <option value="Nasal Discharge">Nasal Discharge</option>
-                <option value="Eye Discharge">Eye Discharge</option>
-                <option value="Fever">Fever</option>
-                <option value="Lethargy">Lethargy</option>
-                <option value="Swelling">Swelling</option>
-            </select>
-        </div>
-
-        <div class="form-group">
-            <label for="symptom2">Symptom 2:</label>
-            <select id="symptom2" name="symptom2">
-                <option value="">None</option>
-                <option value="Appetite loss">Appetite loss</option>
-                <option value="Vomiting">Vomiting</option>
-                <option value="Diarrhea">Diarrhea</option>
-                <option value="Coughing">Coughing</option>
-                <option value="Difficulty breathing">Difficulty breathing</option>
-                <option value="Lameness">Lameness</option>
-                <option value="Skin rash">Skin rash</option>
-                <option value="Nasal Discharge">Nasal Discharge</option>
-                <option value="Eye Discharge">Eye Discharge</option>
-                <option value="Fever">Fever</option>
-                <option value="Lethargy">Lethargy</option>
-                <option value="Swelling">Swelling</option>
-            </select>
-        </div>
-
-        <div class="form-group">
-            <label for="symptom3">Symptom 3:</label>
-            <select id="symptom3" name="symptom3">
-                <option value="">None</option>
-                <option value="Appetite loss">Appetite loss</option>
-                <option value="Vomiting">Vomiting</option>
-                <option value="Diarrhea">Diarrhea</option>
-                <option value="Coughing">Coughing</option>
-                <option value="Difficulty breathing">Difficulty breathing</option>
-                <option value="Lameness">Lameness</option>
-                <option value="Skin rash">Skin rash</option>
-                <option value="Nasal Discharge">Nasal Discharge</option>
-                <option value="Eye Discharge">Eye Discharge</option>
-                <option value="Fever">Fever</option>
-                <option value="Lethargy">Lethargy</option>
-                <option value="Swelling">Swelling</option>
-            </select>
-        </div>
-
-        <div class="form-group">
-            <label for="symptom4">Symptom 4:</label>
-            <select id="symptom4" name="symptom4">
-                <option value="">None</option>
-                <option value="Appetite loss">Appetite loss</option>
-                <option value="Vomiting">Vomiting</option>
-                <option value="Diarrhea">Diarrhea</option>
-                <option value="Coughing">Coughing</option>
-                <option value="Difficulty breathing">Difficulty breathing</option>
-                <option value="Lameness">Lameness</option>
-                <option value="Skin rash">Skin rash</option>
-                <option value="Nasal Discharge">Nasal Discharge</option>
-                <option value="Eye Discharge">Eye Discharge</option>
-                <option value="Fever">Fever</option>
-                <option value="Lethargy">Lethargy</option>
-                <option value="Swelling">Swelling</option>
-            </select>
-        </div>
-
-        <button type="submit">Predict</button>
-    </form>
+            <button type="submit" class="btn btn-primary">Predict Health Status</button>
+        </form>
+    </div>
 
     {% if prediction %}
-        <div class="result">
-            <h3>Prediction: {{ prediction }}</h3>
-            <p>Confidence: {{ probability }}</p>
+    <div class="prediction-results">
+        <h2>Prediction Results</h2>
 
-            {% if details %}
-                <div class="details">
-                    <p>{{ details.message }}</p>
-                    <h4>Recommendations:</h4>
-                    <ul>
-                        {% for rec in details.recommendations %}
-                            <li>{{ rec }}</li>
-                        {% endfor %}
-                    </ul>
+        <div class="results-summary">
+            <div class="input-summary">
+                <h3>Animal Information:</h3>
+                <p><strong>Type:</strong> {{ request.form.AnimalName }}</p>
+
+                <h3>Symptoms Observed:</h3>
+                <ul class="symptoms-list">
+                    {% for i in range(1, 6) %}
+                        {% if request.form['symptoms' + i|string] != 'No' %}
+                            <li>{{ request.form['symptoms' + i|string] }}</li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <div class="prediction-details">
+                <div class="prediction-card {% if prediction == 'Yes' %}dangerous{% else %}safe{% endif %}">
+                    <h3>Health Status:</h3>
+                    <p class="prediction-value">
+                        {% if prediction == 'Yes' %}
+                            Dangerous (Needs Attention)
+                        {% else %}
+                            Healthy
+                        {% endif %}
+                    </p>
+                    <div class="confidence-meter">
+                        <div class="meter-bar" style="width: {{ probability }}%"></div>
+                        <span>{{ probability }}% confidence</span>
+                    </div>
                 </div>
-            {% endif %}
+
+                <div class="advice-card">
+                    <h3>Recommended Actions:</h3>
+                    <p>{{ advice }}</p>
+                    {% if prediction == 'Yes' %}
+                        <p class="urgent">Please consult a veterinarian immediately.</p>
+                    {% endif %}
+                </div>
+            </div>
         </div>
+    </div>
     {% endif %}
 
     {% if error %}
-        <div class="error">
-            <p>{{ error }}</p>
-        </div>
+    <div class="error-message">
+        <p>{{ error }}</p>
+    </div>
     {% endif %}
+</div>
 {% endblock %}
