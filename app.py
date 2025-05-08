@@ -10,7 +10,7 @@ from rsa import generate_rsa_keys, rsa_encrypt
 
 public_key, private_key = generate_rsa_keys()
 app = Flask(__name__, static_folder='static', static_url_path='/static')
-DATABASE = 'users.db'
+DATABASE = 'livestock.db'
 app.secret_key = 'your-very-secret-key'
 
 # Load the XGBoost model
@@ -45,6 +45,20 @@ def init_db():
                 username TEXT UNIQUE NOT NULL,
                 password TEXT NOT NULL
             )
+        """)
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS types (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                atype TEXT UNIQUE NOT NULL
+            )
+        """)
+        conn.execute("""
+                CREATE TABLE IF NOT EXISTS breeds (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    type_id INTEGER NOT NULL,
+                    breed TEXT UNIQUE NOT NULL,
+                    FOREIGN KEY (type_id) REFERENCES types(id) ON DELETE CASCADE
+                )
         """)
 
 
