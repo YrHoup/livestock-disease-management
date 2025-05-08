@@ -141,24 +141,24 @@ def check_healthy(data):
         if symptom_count == 4:
             pass
         elif symptom_count == 3:
-            confidence -= 20.0
+            confidence -= 40.0
         else:
-            confidence -= 30.0
+            confidence -= 60.0
 
         # Weight check
         weight = float(data['Weight'])
         if not (weight_range[0] <= weight <= weight_range[1]):
-            confidence -= 20.0
+            confidence -= 30.0
 
         # Temperature check
         temp = float(data['Body_Temperature'].replace("°C", "").strip())
         if not (temp_range[0] <= temp <= temp_range[1]):
-            confidence -= 20.0
+            confidence -= 30.0
 
         # Heart rate check
         rate = int(data['Heart_Rate'])
         if not (rate_range[0] <= rate <= rate_range[1]):
-            confidence -= 20.0
+            confidence -= 30.0
 
     if confidence < 50.0:
         is_healthy = False

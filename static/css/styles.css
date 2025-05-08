@@ -138,6 +138,7 @@ main {
 }
 
 .btn {
+    text-decoration: none;
     padding: 12px 24px;
     border: none;
     border-radius: 50px;

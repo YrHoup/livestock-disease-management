@@ -1,4 +1,6 @@
 import json
+import os
+import random
 import sqlite3
 
 import numpy as np
@@ -254,6 +256,24 @@ def get_breeds(animal_type):
     breeds = [row[0] for row in cursor.fetchall()]
     conn.close()
     return jsonify(breeds)
+
+
+@app.route('/advice')
+def advice():
+    try:
+        with open('advice.json', 'r') as f:
+            all_advice = json.load(f)
+
+            # Shuffle the advice list and take the first 3 items
+            random.shuffle(all_advice)
+            advice_list = all_advice[:1]
+
+        print("Loaded advice.json successfully")
+    except Exception as e:
+        print(f"Failed to load advice.json: {e}")
+        advice_list = ["Error loading advice. Please check the system configuration."]
+    return render_template('advice.html', advice_list=advice_list)
+
 
 
 if __name__ == '__main__':

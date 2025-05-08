@@ -1,0 +1,137 @@
+{% extends 'base.html' %}
+
+{% block title %}Advice & Resources - Livestock Health Guardian{% endblock %}
+
+{% block content %}
+<div class="main-content">
+    <section class="welcome-section">
+        <h1>Livestock Health Advice</h1>
+        <p class="subtitle">Expert recommendations to keep your animals healthy</p>
+    </section>
+
+    <div class="advice-sections">
+        <section class="advice-list">
+            <h2>Best Practices</h2>
+            <div class="card-container">
+                {% for item in advice_list %}
+                <div class="advice-card">
+                    <div class="advice-icon">
+                        <img src="{{ url_for('static', filename='icons/advice.svg') }}" alt="Advice">
+                    </div>
+                    <p>{{ item }}</p>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+
+        <section class="resources-section">
+            <h2>Additional Resources</h2>
+            <div class="graph-container two-items">
+                <div class="resource-item graph-item">
+                    <div class="resource-content">
+                        <div class="resource-text">
+                            <h3>Disease Prevention</h3>
+                            <p>Learn about biosecurity measures to prevent common livestock diseases</p>
+                        </div>
+                        <a href="https://www.government.nl/topics/animal-diseases/preventing-animal-diseases" class="btn btn-secondary">Learn More</a>
+                    </div>
+                </div>
+                <div class="resource-item graph-item">
+                    <div class="resource-content">
+                        <div class="resource-text">
+                            <h3>Seasonal Health Tips</h3>
+                            <p>Prepare your farm for seasonal health challenges throughout the year</p>
+                        </div>
+                        <a href="https://www.chestnutmill.co.uk/blogs/farming-smallholding-articles/seasonal-livestock-care-essential-strategies-for-year-round-success" class="btn btn-secondary">View Tips</a>
+                    </div>
+                </div>
+            </div>
+            <div class="graph-container two-items">
+                <div class="resource-item graph-item">
+                    <div class="resource-content">
+                        <div class="resource-text">
+                            <h3>Veterinary Services</h3>
+                            <p>Find qualified veterinarians specializing in farm animals in your area</p>
+                        </div>
+                        <a href="https://www.google.com/maps/search/veterinarian+farm+animals+near+me" class="btn btn-secondary">Find Help</a>
+                    </div>
+                </div>
+                <div class="resource-item graph-item">
+                    <div class="resource-content">
+                        <div class="resource-text">
+                            <h3>Nutrition Guidelines</h3>
+                            <p>Discover optimal feeding practices for different livestock species</p>
+                        </div>
+                        <a href="https://www.fao.org/4/i1379e/i1379e.pdf" class="btn btn-secondary">Read Guidelines</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div class="health-tip health-alert">
+        <p><strong>Emergency Health Alert:</strong> Always contact a veterinarian immediately if your animals show serious symptoms like high fever, severe lethargy, or difficulty breathing.</p>
+    </div>
+
+    <div class="action-buttons">
+        <a href="/predict" class="btn btn-primary">Predict Disease</a>
+        <a href="/about" class="btn btn-secondary">About Us</a>
+    </div>
+</div>
+
+<style>
+
+
+   .resource-content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 50px;
+    gap: 10px;
+}
+
+.resource-text {
+    flex: 1 1 250px;
+    min-width: 200px;
+}
+
+.resource-item .btn {
+    text-decoration: none;
+    white-space: nowrap;
+    padding: 10px 15px;
+    flex: 0 0 auto;
+    align-self: flex-start;
+}
+
+
+    .resource-text h3 {
+        margin-top: 0;
+        margin-bottom: 5px;
+    }
+
+    .resource-item {
+        padding: 5px;
+        margin-bottom: 15px;
+        border-radius: 8px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+    }
+
+
+    .graph-container {
+        margin-bottom: 30px;
+    }
+
+    .health-alert {
+        margin-bottom: 30px;
+    }
+
+    .action-buttons {
+        margin-bottom: 100px; /* Increased bottom margin to avoid sliding tab overlap */
+    }
+
+    .main-content {
+        padding-bottom: 100px;
+    }
+</style>
+{% endblock %}
