@@ -10,23 +10,93 @@
     <div class="prediction-form-container">
         <form method="POST" action="/predict" class="prediction-form">
             <div class="form-group">
-                <label for="AnimalName">Animal Type:</label>
-                <select id="AnimalName" name="AnimalName" required>
-                    <option value="">Select animal</option>
-                    <option value="Horse">Horse</option>
-                    <option value="Cow">Cow</option>
-                    <option value="Sheep">Sheep</option>
-                    <option value="Goat">Goat</option>
-                    <option value="Pig">Pig</option>
-                    <option value="Chicken">Chicken</option>
-                    <option value="Duck">Duck</option>
-                    <option value="Rabbit">Rabbit</option>
-                    <option value="Dog">Dog</option>
-                    <option value="Cat">Cat</option>
+                <label for="Animal_Type">Animal Type:</label>
+                <select id="Animal_Type" name="Animal_Type" onchange="loadBreeds(this.value)" required>
+                    <option value="">Select animal type</option>
                 </select>
             </div>
 
-            <h3>Symptoms (Select up to 4 most prominent symptoms)</h3>
+            <div class="form-group">
+                <label for="Breed">Breed:</label>
+                <select id="Breed" name="Breed" required>
+                    <option value="">Select breed</option>
+                </select>
+            </div>
+
+            <script>
+                window.onload = function() {
+                    fetch('/get_animal_types')
+                        .then(res => res.json())
+                        .then(types => {
+                            const select = document.getElementById('Animal_Type');
+                            types.forEach(type => {
+                                const opt = document.createElement('option');
+                                opt.value = type;
+                                opt.textContent = type;
+                                select.appendChild(opt);
+                            });
+                        });
+                };
+
+                function loadBreeds(animalType) {
+                    fetch('/get_breeds/' + encodeURIComponent(animalType))
+                        .then(res => res.json())
+                        .then(breeds => {
+                            const breedSelect = document.getElementById('Breed');
+                            breedSelect.innerHTML = '<option value="">Select breed</option>';
+                            breeds.forEach(breed => {
+                                const opt = document.createElement('option');
+                                opt.value = breed;
+                                opt.textContent = breed;
+                                breedSelect.appendChild(opt);
+                            });
+                        });
+                }
+            </script>
+
+            <div class="form-group">
+                <label for="Age">Age (in years):</label>
+                <input type="number" id="Age" name="Age" min="0" required>
+            </div>
+
+            <div class="form-group">
+                <label for="Gender">Gender:</label>
+                <select id="Gender" name="Gender" required>
+                    <option value="">Select gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="Weight">Weight (kg):</label>
+                <input type="number" step="0.1" id="Weight" name="Weight" min="0" required>
+            </div>
+
+            <div class="form-group">
+                <label for="Duration">Symptom Duration:</label>
+                <input type="text" id="Duration" name="Duration" placeholder="e.g. 3 days" pattern="^\d+\s?(day|days|week|weeks)$" required>
+            </div>
+
+            <div class="form-group">
+                <label for="Body_Temperature">Body Temperature (°C):</label>
+                <input type="text" id="Body_Temperature" name="Body_Temperature" placeholder="e.g. 39.2°C" required onblur="appendCelsius(this)">
+            </div>
+
+        <script>
+            function appendCelsius(input) {
+                if (!input.value.includes("°C") && input.value) {
+                    input.value = input.value + "°C";
+                }
+            }
+        </script>
+
+            <div class="form-group">
+                <label for="Heart_Rate">Heart Rate (bpm):</label>
+                <input type="number" id="Heart_Rate" name="Heart_Rate" min="0" required>
+            </div>
+
+            <h3>Symptoms (Select up to 4)</h3>
             <div class="symptoms-grid">
                 {% set symptoms = [
                     'Fever', 'Lethargy', 'Appetite Loss', 'Vomiting', 'Diarrhea',
@@ -34,11 +104,10 @@
                     'Dehydration', 'Eye Discharge', 'Nasal Discharge', 'Sneezing',
                     'Weight Loss', 'Decreased Milk Yield', 'Reduced Mobility'
                 ] %}
-
                 {% for i in range(1, 5) %}
                 <div class="symptom-group">
-                    <label for="symptoms{{i}}">Symptom {{i}}:</label>
-                    <select id="symptoms{{i}}" name="symptoms{{i}}" required>
+                    <label for="Symptom_{{i}}">Symptom {{i}}:</label>
+                    <select id="Symptom_{{i}}" name="Symptom_{{i}}" required>
                         <option value="No">No symptom</option>
                         {% for symptom in symptoms %}
                         <option value="{{ symptom }}">{{ symptom }}</option>
@@ -55,46 +124,46 @@
     {% if prediction %}
     <div class="prediction-results">
         <h2>Prediction Results</h2>
-
         <div class="results-summary">
             <div class="input-summary">
                 <h3>Animal Information:</h3>
-                <p><strong>Type:</strong> {{ request.form.AnimalName }}</p>
+                <p><strong>Type:</strong> {{ request.form.Animal_Type }}</p>
+                <p><strong>Breed:</strong> {{ request.form.Breed }}</p>
+                <p><strong>Age:</strong> {{ request.form.Age }} years</p>
 
                 <h3>Symptoms Observed:</h3>
                 <ul class="symptoms-list">
-                    {% for i in range(1, 6) %}
-                        {% if request.form['symptoms' + i|string] != 'No' %}
-                            <li>{{ request.form['symptoms' + i|string] }}</li>
+                    {% for i in range(1, 5) %}
+                        {% if request.form['Symptom_' ~ i] != 'No' %}
+                            <li>{{ request.form['Symptom_' ~ i] }}</li>
                         {% endif %}
                     {% endfor %}
                 </ul>
             </div>
 
             <div class="prediction-details">
-                <div class="prediction-card {% if prediction == 'Yes' %}dangerous{% else %}safe{% endif %}">
-                    <h3>Health Status:</h3>
-                    <p class="prediction-value">
-                        {% if prediction == 'Yes' %}
-                            Dangerous (Needs Attention)
-                        {% else %}
-                            Healthy
-                        {% endif %}
-                    </p>
-                    <div class="confidence-meter">
-                        <div class="meter-bar" style="width: {{ probability }}%"></div>
-                        <span>{{ probability }}% confidence</span>
-                    </div>
-                </div>
+    {% set disease = prediction['Disease'] %}
+    {% set confidence = prediction['Confidence'] %}
+    <div class="prediction-card {% if disease|lower != 'healthy' and disease|lower != 'no disease' %}dangerous{% else %}safe{% endif %}">
+        <h3>Predicted Condition:</h3>
+        <p class="prediction-value">
+            {{ disease if disease else 'Unknown' }}
+        </p>
+        <div class="confidence-meter">
+            <div class="meter-bar" style="width: {{ confidence|replace('%', '') }}%"></div>
+            <span>{{ confidence }} confidence</span>
+        </div>
+    </div>
 
-                <div class="advice-card">
-                    <h3>Recommended Actions:</h3>
-                    <p>{{ advice }}</p>
-                    {% if prediction == 'Yes' %}
-                        <p class="urgent">Please consult a veterinarian immediately.</p>
-                    {% endif %}
-                </div>
-            </div>
+    <div class="advice-card">
+        <h3>Recommended Actions:</h3>
+        <p>{{ advice }}</p>
+        {% if disease|lower != 'healthy' and disease|lower != 'no disease' %}
+            <p class="urgent">Please consult a veterinarian immediately.</p>
+        {% endif %}
+    </div>
+</div>
+
         </div>
     </div>
     {% endif %}

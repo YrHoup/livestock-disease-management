@@ -4,8 +4,9 @@ import sqlite3
 import numpy as np
 import pandas as pd
 import xgboost as xgb
-from flask import Flask, render_template, request, redirect, session, flash
+from flask import Flask, render_template, request, redirect, session, flash, jsonify
 
+from predict import predict_disease, check_healthy
 from rsa import generate_rsa_keys, rsa_encrypt
 
 public_key, private_key = generate_rsa_keys()
@@ -81,31 +82,70 @@ def home():
 def predict():
     if request.method == 'POST':
         try:
-            # Get form data matching model features
-            data = {
-                'AnimalName': request.form['AnimalName'],
-                'symptoms1': request.form['symptoms1'],
-                'symptoms2': request.form['symptoms2'],
-                'symptoms3': request.form['symptoms3'],
-                'symptoms4': request.form['symptoms4'],
-                'symptoms5': request.form['symptoms5']
+            temp_data = {
+                "Animal_Type": request.form['Animal_Type'],
+                "Breed": request.form['Breed'],
+                "Age": int(request.form['Age']),
+                "Gender": request.form['Gender'],
+                "Weight": float(request.form['Weight']),
+                "Symptom_1": request.form['Symptom_1'],
+                "Symptom_2": request.form['Symptom_2'],
+                "Symptom_3": request.form['Symptom_3'],
+                "Symptom_4": request.form['Symptom_4'],
+                "Duration": request.form['Duration'],
+                "Body_Temperature": request.form['Body_Temperature'],
+                "Heart_Rate": int(request.form['Heart_Rate']),
             }
 
-            # Convert to DataFrame with correct feature order
-            input_df = pd.DataFrame([data], columns=['AnimalName', 'symptoms1', 'symptoms2',
-                                                     'symptoms3', 'symptoms4', 'symptoms5'])
+            binary_data = {
+                'Appetite Loss': 'Appetite_Loss',
+                'Vomiting': 'Vomiting',
+                'Diarrhea': 'Diarrhea',
+                'Coughing': 'Coughing',
+                'Labored Breathing': 'Labored_Breathing',
+                'Lameness': 'Lameness',
+                'Skin Lesions': 'Skin_Lesions',
+                'Nasal Discharge': 'Nasal_Discharge',
+                'Eye Discharge': 'Eye_Discharge'
+            }
 
-            # Make prediction
-            prediction = model.predict(input_df)[0]
-            probability = model.predict_proba(input_df)[0][1] * 100  # Probability of being dangerous
+            for col in binary_data.values():
+                temp_data[col] = 'No'
 
-            # Generate more specific advice based on symptoms
-            symptoms = [data[f'symptoms{i}'] for i in range(1, 6) if data[f'symptoms{i}'] != 'No']
-            advice = generate_advice(prediction, data['AnimalName'], symptoms)
+            for col in ['Symptom_1', 'Symptom_2', 'Symptom_3', 'Symptom_4']:
+                symptom = temp_data[col]
+                if symptom in binary_data:
+                    temp_data[binary_data[symptom]] = 'Yes'
+
+            ordered_keys = [
+                "Animal_Type", "Breed", "Age", "Gender", "Weight", "Symptom_1", "Symptom_2",
+                "Symptom_3", "Symptom_4",
+                "Duration", "Appetite_Loss", "Vomiting", "Diarrhea", "Coughing",
+                "Labored_Breathing", "Lameness", "Skin_Lesions",
+                "Nasal_Discharge", "Eye_Discharge", "Body_Temperature", "Heart_Rate"
+            ]
+
+            data = {key: temp_data.get(key) for key in ordered_keys}
+
+            checked_data = check_healthy(data)
+
+            if checked_data['is_healthy']:
+
+                prediction = {
+                    'Disease': "Healthy",
+                    'Confidence': checked_data['Confidence']
+                }
+                advice = disease_advice[0]
+            else:
+                # Make prediction
+                prediction = predict_disease(data)
+
+                # Generate more specific advice based on symptoms
+                symptoms = [data[f'Symptom_{i}'] for i in range(1, 4) if data[f'Symptom_{i}'] != 'No']
+                advice = generate_advice(prediction['Disease'] != "Healthy", data['Animal_Type'], symptoms)
 
             return render_template('predict.html',
-                                   prediction='Yes' if prediction == 1 else 'No',
-                                   probability=f"{probability:.2f}",
+                                   prediction=prediction,
                                    advice=advice)
         except Exception as e:
             return render_template('predict.html', error=f"Error processing input: {str(e)}")
@@ -188,6 +228,32 @@ def login():
 def logout():
     session.pop('username', None)
     return redirect('/')
+
+@app.route('/get_animal_types')
+def get_animal_types():
+    conn = sqlite3.connect('livestock.db')
+    cursor = conn.cursor()
+    cursor.execute("SELECT DISTINCT atype FROM types")
+    types = [row[0] for row in cursor.fetchall()]
+    conn.close()
+    return jsonify(types)
+
+
+@app.route('/get_breeds/<animal_type>')
+def get_breeds(animal_type):
+    conn = sqlite3.connect('livestock.db')
+    cursor = conn.cursor()
+
+    cursor.execute("""
+                   SELECT b.breed
+                   FROM breeds b
+                            JOIN types a ON b.type_id = a.id
+                   WHERE a.atype = ?
+                   """, (animal_type,))
+
+    breeds = [row[0] for row in cursor.fetchall()]
+    conn.close()
+    return jsonify(breeds)
 
 
 if __name__ == '__main__':
